@@ -44,8 +44,11 @@ describe('Test DoublyLinkedList Class', () => {
 
   test('Test insert() function', () => {
     const list = new DoublyLinkedList<string>()
-    const insertNode = new DoublyLinkedListNode<string>('test')
-    const node1 = list.insert(insertNode, list.head)
-    expect(list.head.next).toBe(node1)
+    const insertNode1 = new DoublyLinkedListNode<string>('test')
+    const insertNode2 = new DoublyLinkedListNode<string>('good')
+    const node1 = list.insert(insertNode1, list.head)
+    const node2 = list.insert(insertNode2, list.head)
+    expect(list.head.next).toBe(node2)
+    expect(node2.next).toBe(node1)
   })
 })

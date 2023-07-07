@@ -6,8 +6,8 @@
   "author": "Xiaohan Kong <kxh4892636@gmail.com> (https://github.com/kxh4892636)",
   "license": "MIT",
   "scripts": {
-    "lint:check": "eslint package --max-warnings 0",
-    "lint:fix": "eslint package --fix",
+    "lint:check": "eslint src --max-warnings 0",
+    "lint:fix": "eslint src --fix",
     "test:coverage": "jest --coverage",
     "prepare": "husky install"
   },

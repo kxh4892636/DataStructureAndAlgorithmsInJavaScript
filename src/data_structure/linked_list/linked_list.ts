@@ -45,6 +45,7 @@ export class LinkedList<T> {
   }
 
   insert (value:LinkedListNode<T>, position:LinkedListNode<T>) {
+    value.next = position.next
     position.next = value
     return value
   }

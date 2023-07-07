@@ -45,6 +45,7 @@ export class DoublyLinkedList<T> {
   }
 
   insert (value:DoublyLinkedListNode<T>, position:DoublyLinkedListNode<T>) {
+    value.next = position.next
     position.next = value
     return value
   }
