@@ -1,17 +1,17 @@
-import { LinkedList } from '../linked_list/linked_list'
-import { LinkedListNode } from '../linked_list/linked_list_node'
+import { DoublyLinkedList } from '../linked_list/doubly_linked_list'
+import { DoublyLinkedListNode } from '../linked_list/doubly_linked_list_node'
 
-export class Stack<T> {
-  private list:LinkedList<T>
+export class StackWithLinkedList<T> {
+  private list:DoublyLinkedList<T>
   constructor () {
-    this.list = new LinkedList<T>()
+    this.list = new DoublyLinkedList<T>()
   }
 
   isEmpty () {
     return this.list.isEmpty()
   }
 
-  push (value:LinkedListNode<T>) {
+  push (value:DoublyLinkedListNode<T>) {
     const head = this.list.head
     this.list.insert(value, head)
     return true
@@ -20,13 +20,13 @@ export class Stack<T> {
   pop () {
     if (this.isEmpty()) return null
     const head = this.list.head
-    const deletedNode = head.next as LinkedListNode<T>
+    const deletedNode = head.next as DoublyLinkedListNode<T>
     this.list.delete(deletedNode)
     return deletedNode
   }
 
-  top () {
+  peek () {
     if (this.isEmpty()) return null
-    return this.list.head.next as LinkedListNode<T>
+    return this.list.head.next as DoublyLinkedListNode<T>
   }
 }

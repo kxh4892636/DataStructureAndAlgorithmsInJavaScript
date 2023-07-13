@@ -35,7 +35,6 @@ export class QueueArray {
     this._size -= 1
     if (this._front === this._capacity - 1) this._front = 0
     else this._front += 1
-    console.log(this._front)
     return true
   }
 }

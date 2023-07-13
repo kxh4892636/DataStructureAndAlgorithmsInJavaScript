@@ -1,5 +1,5 @@
 
-export class StackArray<T> {
+export class StackWithArray<T> {
   private _array:T[]
   private _index:number
   private _size:number
@@ -32,7 +32,7 @@ export class StackArray<T> {
     return popValue
   }
 
-  top () {
+  peek () {
     if (this.isEmpty()) return null
     return this._array[this._index]
   }
