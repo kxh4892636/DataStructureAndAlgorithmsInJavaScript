@@ -10,19 +10,72 @@ export class BinarySearchTree {
     return this._root.find(value)
   }
 
-  findMin ():BinarySearchTreeNode {
-    return this._root.findMin()
-  }
-
-  findMax ():BinarySearchTreeNode {
-    return this._root.findMax()
-  }
-
-  insert (value:number):BinarySearchTreeNode|null {
+  insert (value:number):boolean {
     return this._root.insert(value)
   }
 
-  delete (value:number):BinarySearchTreeNode|null {
+  delete (value:number):boolean {
     return this._root.delete(value)
+  }
+
+  levelOrder (root:BinarySearchTreeNode):BinarySearchTreeNode[] {
+    const queue = [root]
+    const list:BinarySearchTreeNode[] = []
+    while (queue.length) {
+      const node = queue.shift() as BinarySearchTreeNode
+      list.push(node)
+      if (node._left) {
+        queue.push(node._left)
+      }
+      if (node._right) {
+        queue.push(node._right)
+      }
+    }
+    return list
+  }
+
+  preOrder (root:BinarySearchTreeNode):BinarySearchTreeNode[] {
+    const list:BinarySearchTreeNode[] = []
+    const loop = (node:BinarySearchTreeNode) => {
+      list.push(node)
+      if (node._left) {
+        loop(node._left)
+      }
+      if (node._right) {
+        loop(node._right)
+      }
+    }
+    loop(root)
+    return list
+  }
+
+  inOrder (root:BinarySearchTreeNode):BinarySearchTreeNode[] {
+    const list:BinarySearchTreeNode[] = []
+    const loop = (node:BinarySearchTreeNode) => {
+      if (node._left) {
+        loop(node._left)
+      }
+      list.push(node)
+      if (node._right) {
+        loop(node._right)
+      }
+    }
+    loop(root)
+    return list
+  }
+
+  postOrder (root:BinarySearchTreeNode):BinarySearchTreeNode[] {
+    const list:BinarySearchTreeNode[] = []
+    const loop = (node:BinarySearchTreeNode) => {
+      if (node._left) {
+        loop(node._left)
+      }
+      if (node._right) {
+        loop(node._right)
+      }
+      list.push(node)
+    }
+    loop(root)
+    return list
   }
 }

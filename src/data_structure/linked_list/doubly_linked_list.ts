@@ -16,10 +16,16 @@ export class DoublyLinkedList<T> {
     return node.next === null
   }
 
-  find (value:T): DoublyLinkedListNode<T> | null {
+  find (
+    value:T, callback:((value:T)=>boolean)|null = null
+  ): DoublyLinkedListNode<T> | null {
     if (this.isEmpty()) return null
-    let node:DoublyLinkedListNode<T>|null = this.head as DoublyLinkedListNode<T>
+    let node:DoublyLinkedListNode<T>|null =
+    this.head.next as DoublyLinkedListNode<T>
     while (node) {
+      if (callback && callback(node.value)) {
+        return node
+      }
       if (node.value === value) return node
       node = node.next
     }

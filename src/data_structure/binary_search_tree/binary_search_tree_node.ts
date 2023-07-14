@@ -33,68 +33,70 @@ export class BinarySearchTreeNode {
     return this._left.findMin()
   }
 
-  findMax ():BinarySearchTreeNode {
-    if (this._right === null) return this
-    return this._right.findMax()
-  }
-
-  insert (value:number):BinarySearchTreeNode|null {
+  insert (value:number):boolean {
     if (this._value === null) {
       this._value = value
-      return this
+      return true
     }
 
     if (this._value > value) {
       if (this._left === null) {
         this._left = new BinarySearchTreeNode(value)
         this._left._parent = this
-        return this._left
+        return true
       }
       this._left.insert(value)
-      return this._left
+      return true
     }
 
     if (this._value < value) {
       if (this._right === null) {
         this._right = new BinarySearchTreeNode(value)
         this._right._parent = this
-        return this._right
+        return true
       }
       this._right.insert(value)
-      return this._right
+      return true
     }
 
-    return null
+    return false
   }
 
-  delete (value:number):BinarySearchTreeNode|null {
+  delete (value:number):boolean {
     const node = this.find(value)
-    if (node === null) return null
-    const parent = node._parent
-    // root
-    if (parent === null) {
-      throw new Error('root')
-    }
+    if (node === null) return false
+    // 2
     if (node._left && node._right) {
       const minNode = node._right.findMin()
       node._value = minNode._value
       if (minNode._right) {
         (minNode._parent as BinarySearchTreeNode)._left = minNode._right
         minNode._right._parent = (minNode._parent as BinarySearchTreeNode)
+        minNode._right = null
+      }
+      minNode._parent = null
+      return true
+    }
+    // 0
+    if (!node._left && !node._right) {
+      if (node._parent) {
+        if (node._parent._left?._value === value) node._parent._left = null
+        if (node._parent._right?._value === value) node._parent._right = null
       }
       node._parent = null
-      return node
+      return true
     }
-    if (!node._left && !node._right) {
-      if (parent._left?._value === value) parent._left = null
-      if (parent._right?._value === value) parent._right = null
-      node._parent = null
-      return node
+    // 1
+    if (node._left) {
+      node._value = node._left._value
+      node._left._parent = null
+      node._left = null
     }
-    const children = (node._left || node._right) as BinarySearchTreeNode
-    if (parent._left === node) parent._left = children
-    if (parent._right === node) parent._right = children
-    node._parent = null
-    return node
+    if (node._right) {
+      node._value = node._right._value
+      node._right._parent = null
+      node._right = null
+    }
+    return true
   }
 }

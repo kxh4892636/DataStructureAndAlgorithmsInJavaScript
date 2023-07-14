@@ -47,68 +47,66 @@ export class AVLTreeNode {
     return this._left.findMin()
   }
 
-  findMax ():AVLTreeNode {
-    if (this._right === null) return this
-    return this._right.findMax()
-  }
-
-  insert (value:number):AVLTreeNode|null {
+  insert (value:number):boolean {
     if (this._value === null) {
       this._value = value
-      return this
+      return true
     }
 
     if (this._value > value) {
       if (this._left === null) {
         this._left = new AVLTreeNode(value)
         this._left._parent = this
-        return this._left
+        return true
       }
-
-      return this._left.insert(value)
+      this._left.insert(value)
+      return true
     }
 
-    if (this._value < value) {
-      if (this._right === null) {
-        this._right = new AVLTreeNode(value)
-        this._right._parent = this
-        return this._right
-      }
-
-      return this._right.insert(value)
+    if (this._right === null) {
+      this._right = new AVLTreeNode(value)
+      this._right._parent = this
+      return true
     }
-
-    return null
+    this._right.insert(value)
+    return true
   }
 
-  delete (value:number):AVLTreeNode|null {
+  delete (value:number):boolean {
     const node = this.find(value)
-    if (node === null) return null
-    const parent = node._parent
-    // root
-    if (parent === null) {
-      throw new Error('root')
-    }
+    if (node === null) return false
+    // 2
     if (node._left && node._right) {
       const minNode = node._right.findMin()
       node._value = minNode._value
       if (minNode._right) {
         (minNode._parent as AVLTreeNode)._left = minNode._right
         minNode._right._parent = (minNode._parent as AVLTreeNode)
+        minNode._right = null
+      }
+      minNode._parent = null
+      return true
+    }
+    // 0
+    if (!node._left && !node._right) {
+      if (node._parent) {
+        if (node._parent._left?._value === value) node._parent._left = null
+        if (node._parent._right?._value === value) node._parent._right = null
       }
       node._parent = null
-      return node
+      return true
     }
-    if (!node._left && !node._right) {
-      if (parent._left?._value === value) parent._left = null
-      if (parent._right?._value === value) parent._right = null
-      node._parent = null
-      return node
+    // 1
+    if (node._left) {
+      node._value = node._left._value
+      node._left._parent = null
+      node._left = null
     }
-    const children = (node._left || node._right) as AVLTreeNode
-    if (parent._left === node) parent._left = children
-    if (parent._right === node) parent._right = children
-    node._parent = null
-    return node
+    if (node._right) {
+      node._value = node._right._value
+      node._right._parent = null
+      node._right = null
+    }
+    return true
   }
 }

@@ -6,27 +6,17 @@ export class AVLTree {
     this._root = new AVLTreeNode(value)
   }
 
-  find (value:number):AVLTreeNode |null {
+  find (value:number) {
     return this._root.find(value)
   }
 
-  findMin ():AVLTreeNode {
-    return this._root.findMin()
-  }
-
-  findMax ():AVLTreeNode {
-    return this._root.findMax()
-  }
-
-  insert (value:number):AVLTreeNode|null {
-    const node = this._root.insert(value)
-    if (!node) return null
-    let currentNode:AVLTreeNode|null = node
+  insert (value:number) {
+    this._root.insert(value)
+    let currentNode = this._root.find(value)
     while (currentNode) {
       if (this.balance(currentNode)) break
       currentNode = currentNode._parent
     }
-    return node
   }
 
   delete (value:number) {
@@ -36,135 +26,85 @@ export class AVLTree {
 
   balance (node:AVLTreeNode) {
     if (node.leftHeight - node.rightHeight > 1) {
-      const left = node._left as AVLTreeNode
-      if (left.leftHeight > left.rightHeight) {
-        this.rotateLeftLeft(node)
+      const children = node._left as AVLTreeNode
+      if (children.leftHeight > children.rightHeight) {
+        this.rightRotate(node)
       } else {
-        this.rotateLeftRight(node)
+        this.leftRightRotate(node)
       }
       return true
-    }
-    if (node.leftHeight - node.rightHeight < -1) {
-      const right = node._right as AVLTreeNode
-      if (right.leftHeight > right.rightHeight) {
-        this.rotateRightLeft(node)
+    } else if (node.leftHeight - node.rightHeight < -1) {
+      const children = node._right as AVLTreeNode
+      if (children.leftHeight > children.rightHeight) {
+        this.rightLeftRotate(node)
       } else {
-        this.rotateRightRight(node)
+        this.leftRotate(node)
       }
       return true
-    }
-    return false
-  }
-
-  rotateLeftLeft (node:AVLTreeNode):void {
-    const left = node._left as AVLTreeNode
-    const leftRight = left._right
-    const parent = node._parent
-    if (parent) {
-      left._parent = parent
-      if ((parent._value as number) < (node._value as number)) {
-        parent._right = left
-      } else {
-        parent._left = left
-      }
     } else {
-      left._parent = null
-      this._root = left
-    }
-    left._right = node
-    node._parent = left
-    node._left = null
-    if (leftRight) {
-      node._left = leftRight
-      leftRight._parent = node
+      return false
     }
   }
 
-  rotateRightRight (node:AVLTreeNode):void {
-    const right = node._right as AVLTreeNode
-    const rightLeft = right._left
+  rightRotate (node:AVLTreeNode) {
     const parent = node._parent
-    if (parent) {
-      right._parent = parent
-      if ((parent._value as number) < (node._value as number)) {
-        parent._right = right
-      } else {
-        parent._left = right
-      }
+    const children = node._left as AVLTreeNode
+    node._parent = children
+    if (children._right) {
+      node._left = children._right
+      children._right._parent = node
     } else {
-      right._parent = null
-      this._root = right
+      node._left = null
     }
-    right._left = node
-    node._parent = right
-    node._right = null
-    if (rightLeft) {
-      node._right = rightLeft
-      rightLeft._parent = node
+    children._right = node
+    if (parent) {
+      children._parent = parent
+      parent._left = children
+    } else {
+      children._parent = null
+      this._root = children
     }
   }
 
-  rotateRightLeft (node:AVLTreeNode) {
-    const right = node._right as AVLTreeNode
-    const rightLeft = right._left as AVLTreeNode
+  leftRotate (node:AVLTreeNode) {
     const parent = node._parent
-    const rightLeftLeft = rightLeft._left
-    const rightLeftRight = rightLeft._right
-    if (parent) {
-      rightLeft._parent = parent
-      if ((parent._value as number) < (node._value as number)) {
-        parent._right = rightLeft
-      } else {
-        parent._left = rightLeft
-      }
+    const children = node._right as AVLTreeNode
+    node._parent = children
+    if (children._left) {
+      node._right = children._left
+      children._left._parent = node
     } else {
-      rightLeft._parent = null
-      this._root = rightLeft
+      node._right = null
     }
-    rightLeft._left = node
-    rightLeft._right = right
-    node._parent = rightLeft
-    node._right = null
-    right._parent = rightLeft
-    right._left = null
-
-    if (rightLeftLeft) {
-      node._right = rightLeftLeft
-    }
-    if (rightLeftRight) {
-      right._left = rightLeftRight
+    children._left = node
+    if (parent) {
+      children._parent = parent
+      parent._right = children
+    } else {
+      children._parent = null
+      this._root = children
     }
   }
 
-  rotateLeftRight (node:AVLTreeNode) {
-    const left = node._left as AVLTreeNode
-    const leftRight = left._right as AVLTreeNode
-    const leftRightLeft = leftRight._left
-    const leftRightRight = leftRight._right
-    const parent = node._parent
-    if (parent) {
-      leftRight._parent = parent
-      if ((parent._value as number) < (node._value as number)) {
-        parent._right = leftRight
-      } else {
-        parent._left = leftRight
-      }
-    } else {
-      leftRight._parent = null
-      this._root = leftRight
-    }
-    leftRight._right = node
-    leftRight._left = left
-    node._parent = leftRight
-    node._left = null
-    left._parent = leftRight
-    left._right = null
+  leftRightRotate (node:AVLTreeNode) {
+    const children = node._left as AVLTreeNode
+    const grandChildren = children._right as AVLTreeNode
+    children._parent = grandChildren
+    children._right = null
+    grandChildren._left = children
+    grandChildren._parent = node
+    node._left = grandChildren
+    this.rightRotate(node)
+  }
 
-    if (leftRightLeft) {
-      left._right = leftRightLeft
-    }
-    if (leftRightRight) {
-      node._left = leftRightRight
-    }
+  rightLeftRotate (node:AVLTreeNode) {
+    const children = node._right as AVLTreeNode
+    const grandChildren = children._left as AVLTreeNode
+    children._parent = grandChildren
+    children._left = null
+    grandChildren._right = children
+    grandChildren._parent = node
+    node._right = grandChildren
+    this.leftRotate(node)
   }
 }
