@@ -18,7 +18,6 @@ export class QueueWithLinkedList<T> {
   enQueue (node:DoublyLinkedListNode<T>) {
     const head = this.list.head
     if (this.isEmpty()) {
-      this.list.insert(node, head)
       this.front = node
     }
     this.list.insert(node, head)
@@ -27,13 +26,12 @@ export class QueueWithLinkedList<T> {
 
   deQueue () {
     if (this.isEmpty()) throw new Error('empty')
-    const rear = this.rear as DoublyLinkedListNode<T>
-    if (this.front === rear) {
-      this.list.delete(rear)
+    const front = this.front as DoublyLinkedListNode<T>
+    this.list.delete(front)
+    this.front = front.before as DoublyLinkedListNode<T>
+    if (this.isEmpty()) {
       this.rear = null
       this.front = null
     }
-    this.list.delete(rear)
-    this.rear = rear.before as DoublyLinkedListNode<T>
   }
 }
