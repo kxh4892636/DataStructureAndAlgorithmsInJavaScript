@@ -44,5 +44,6 @@ describe('Test DoublyLinkedList Class', () => {
     list.insert(insertNode2, list.head)
     expect(list.head.next).toBe(insertNode2)
     expect(insertNode2.next).toBe(insertNode1)
+    expect(list.head.next?.next).toBe(insertNode1)
   })
 })

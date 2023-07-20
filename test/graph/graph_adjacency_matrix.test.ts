@@ -33,7 +33,7 @@ describe('Test GraphAdjMat', () => {
     expect(instance0.size()).toBe(5)
   })
 
-  test('Return the size of instance', () => {
+  test('Return the index of instance', () => {
     const vertices = ['value1', 'value2', 'value3', 'value4', 'value5']
     const edges:[string, string][] = [
       ['value1', 'value5'],
